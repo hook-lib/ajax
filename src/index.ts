@@ -1,7 +1,7 @@
 import axios, { CancelTokenSource, AxiosResponse, AxiosError } from 'axios'
 import Hook from '@hook/hook'
 import type { setterKey, options as hookOptions } from '@hook/hook'
-
+axios.defaults.withCredentials = true
 export interface options extends hookOptions {
   abortable?: boolean
 }
@@ -134,6 +134,8 @@ export default class Ajax extends Hook {
 }
 
 async function init() {
+  // await fetch('https://cors-demo.glitch.me/allow-cors', { mode: 'cors' }).then((res) => { console.log(res) })
+
   const chain = Ajax.create('/account/login', 'POST')
 
   await chain.config({
@@ -146,6 +148,16 @@ async function init() {
   }).on('netSuccess', (data) => {
     console.log(data)
   }).fetch()
+  // await chain.config({
+  //   baseURL: 'https://cors-demo.glitch.me'
+  // }).params({
+  //   // account: 'admin',
+  //   // password: '123456'
+  // }).on('netRequest', function() {
+  //   console.log('request')
+  // }).on('netSuccess', (data) => {
+  //   console.log(data)
+  // }).fetch()
 }
 
 init()

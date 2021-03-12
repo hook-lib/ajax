@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import strip from '@rollup/plugin-strip'
 import babel from '@rollup/plugin-babel'
 import typescript from '@rollup/plugin-typescript'
+import inject from '@rollup/plugin-inject'
 
 import filesize from 'rollup-plugin-filesize'
 import pkg from './package.json'
@@ -24,34 +25,36 @@ export default [
       format: 'umd',
       name: packageName,
       globals: {
-        axios: 'axios',
+        // axios: 'axios',
       },
       sourcemap: true,
     },
     plugins: [
-      typescript({
-        tsconfig: './tsconfig.json',
-      }),
-
       resolve({
-        extensions,
+        // extensions,
+        browser: true,
       }),
 
       commonjs(),
-
+      typescript({
+        tsconfig: './tsconfig.json',
+      }),
       babel({
         babelHelpers: 'runtime',
         exclude: [/\/node_modules\//],
         extensions,
+      }),
+      inject({
+        Promise: ['es6-promise', 'Promise'],
       }),
 
       strip(),
       // terser(),
       filesize(),
     ],
-    external: (id) => {
-      return /axios/.test(id)
-    },
+    // external: (id) => {
+    //   return /axios/.test(id)
+    // },
   },
   // {
   //   input,
