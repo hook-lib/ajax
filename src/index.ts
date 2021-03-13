@@ -10,7 +10,7 @@ export type method = 'get' | 'post' | 'head' | 'put' | 'delete' | 'connect' | 'o
 
 export default class Ajax extends Hook {
   static axios = axios
-  static create (url: string, method: method, options?: options) : Ajax {
+  static create (url: string, method: method, options?: options) {
     const ajax = new this(options)
     return ajax.url(url).method(method)
   };
@@ -59,8 +59,9 @@ export default class Ajax extends Hook {
 
   abortable() {
     const { CancelToken } = axios
-    const source = CancelToken.source()
+    const source: CancelTokenSource = CancelToken.source()
     this._abortable = source
+    this.config('cancelSource', source)
     this.config('cancelToken', source.token)
     return this
   }
@@ -132,32 +133,3 @@ export default class Ajax extends Hook {
     return this
   }
 }
-
-async function init() {
-  // await fetch('https://cors-demo.glitch.me/allow-cors', { mode: 'cors' }).then((res) => { console.log(res) })
-
-  const chain = Ajax.create('/account/login', 'POST')
-
-  await chain.config({
-    baseURL: 'https://api.vscj.com:3000'
-  }).params({
-    account: 'admin',
-    password: '123456'
-  }).on('netRequest', function() {
-    console.log('request')
-  }).on('netSuccess', (data) => {
-    console.log(data)
-  }).fetch()
-  // await chain.config({
-  //   baseURL: 'https://cors-demo.glitch.me'
-  // }).params({
-  //   // account: 'admin',
-  //   // password: '123456'
-  // }).on('netRequest', function() {
-  //   console.log('request')
-  // }).on('netSuccess', (data) => {
-  //   console.log(data)
-  // }).fetch()
-}
-
-init()
