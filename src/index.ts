@@ -72,6 +72,7 @@ export default class Ajax extends Hook {
     if (source) {
       (<CancelTokenSource>source).cancel(message)
     }
+    this.emit('netAbort', message, source)
     return this
   }
 

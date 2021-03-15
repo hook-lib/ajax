@@ -114,6 +114,7 @@ var Ajax = /*#__PURE__*/function (_Hook) {
         source.cancel(message);
       }
 
+      this.emit('netAbort', message, source);
       return this;
     }
   }, {
