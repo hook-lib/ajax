@@ -138,11 +138,13 @@ var Ajax = /*#__PURE__*/function (_Hook) {
     key: "disable",
     value: function disable() {
       this._ajaxable = false;
+      return this;
     }
   }, {
     key: "enable",
     value: function enable() {
       this._ajaxable = true;
+      return this;
     }
   }, {
     key: "isDisabled",
@@ -299,7 +301,8 @@ var Ajax = /*#__PURE__*/function (_Hook) {
     key: "create",
     value: function create(url, method, options) {
       var ajax = new this(options);
-      return ajax.url(url).method(method);
+      ajax.url(url).method(method);
+      return ajax;
     }
   }]);
 

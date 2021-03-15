@@ -7,7 +7,7 @@ export interface options extends hookOptions {
 export declare type method = 'get' | 'post' | 'head' | 'put' | 'delete' | 'connect' | 'options' | 'trace' | 'GET' | 'POST' | 'HEAD' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE';
 export default class Ajax extends Hook {
     static axios: import("axios").AxiosStatic;
-    static create(url: string, method: method, options?: options): Ajax;
+    static create<T extends Ajax>(url: string, method: method, options?: options): T;
     private _ajaxable;
     private _abortable;
     constructor(options?: options);
@@ -18,10 +18,10 @@ export default class Ajax extends Hook {
     method(method: method): this;
     url(url: string): this;
     abortable(): this;
-    abort(message: string): this;
+    abort(message?: string): this;
     isAbortable(): boolean;
-    disable(): void;
-    enable(): void;
+    disable(): this;
+    enable(): this;
     isDisabled(): boolean;
     convertResponse(res: AxiosResponse): Promise<any>;
     convertError(error: AxiosError): Promise<any>;

@@ -10,9 +10,10 @@ export type method = 'get' | 'post' | 'head' | 'put' | 'delete' | 'connect' | 'o
 
 export default class Ajax extends Hook {
   static axios = axios
-  static create (url: string, method: method, options?: options) {
+  static create <T extends Ajax>(url: string, method: method, options?: options): T {
     const ajax = new this(options)
-    return ajax.url(url).method(method)
+    ajax.url(url).method(method)
+    return <T>ajax
   };
 
   private _ajaxable: boolean = true;
@@ -31,33 +32,33 @@ export default class Ajax extends Hook {
     }
   }
 
-  config(key: setterKey, value?: any) {
+  config(key: setterKey, value?: any): this {
     return this.generateSetter('config')(key, value)
   }
 
-  getConfig(field?: string) {
+  getConfig(field?: string): any {
     return this.generateGetter('config')(field)
   }
 
-  params(key: setterKey, value?: any) {
+  params(key: setterKey, value?: any): this {
     return this.generateSetter('params')(key, value)
   }
 
-  getParams(field?: string) {
+  getParams(field?: string): any {
     return this.generateGetter('params')(field)
   }
 
-  method(method: method) {
+  method(method: method): this {
     this.config('method', method)
     return this
   }
 
-  url(url: string) {
+  url(url: string): this {
     this.config('url', url)
     return this
   }
 
-  abortable() {
+  abortable(): this {
     const { CancelToken } = axios
     const source: CancelTokenSource = CancelToken.source()
     this._abortable = source
@@ -66,7 +67,7 @@ export default class Ajax extends Hook {
     return this
   }
 
-  abort(message: string) {
+  abort(message?: string): this {
     const source = this._abortable
     if (source) {
       (<CancelTokenSource>source).cancel(message)
@@ -74,19 +75,21 @@ export default class Ajax extends Hook {
     return this
   }
 
-  isAbortable() {
+  isAbortable(): boolean {
     return !!this._abortable
   }
 
-  disable() {
+  disable(): this {
     this._ajaxable = false
+    return this
   }
 
-  enable() {
+  enable(): this {
     this._ajaxable = true
+    return this
   }
 
-  isDisabled() {
+  isDisabled(): boolean {
     return this._ajaxable === false
   }
 
@@ -98,7 +101,7 @@ export default class Ajax extends Hook {
     return error
   }
 
-  async fetch() {
+  async fetch(): Promise<this> {
     if (!this._ajaxable) {
       return this
     }
